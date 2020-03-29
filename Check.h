@@ -12,11 +12,13 @@ public:
 
     ifstream inFile;
     int openCount;
+    int lineNumberCount;
     string line;
     string fileName;
-    char* openDelimiter;
+    string delimiter;
+    int* lineNumber;
     GenStack<char> myStack;//create a stack to store all the characters
 
-    char* readFile();
-    void pairMatch(char* arr, int count);
+    string readFile();
+    void pairMatch(string arr, int count);
 };

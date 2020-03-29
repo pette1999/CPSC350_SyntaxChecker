@@ -1,13 +1,14 @@
 #include <iostream>
+#include <fstream>
 #include "Check.h"
-
 using namespace std;
 
 Check::Check()
 {
     fileName = "test.txt";
     openCount = 0;
-    line = "";
+    delimiter = "";
+    lineNumberCount = 0;
 
     ifstream inFile(fileName); //read the file
     line = "";
@@ -23,7 +24,8 @@ Check::Check(string filename)
 {
     fileName = filename;
     openCount = 0;
-    line = "";
+    delimiter = "";
+    lineNumberCount = 0;
 
     ifstream inFile(fileName); //read the file
     line = "";
@@ -35,46 +37,67 @@ Check::Check(string filename)
     }
 }
 
-char* Check::readFile()
+string Check::readFile()
 {
-    //get the number of open brackets
+    inFile.open(fileName);
     while(getline(inFile, line))
     {
         for(char c : line)
         {
             if(c == '{' || c == '(' || c == '[' || c == '}' || c == ')' || c == ']')
             {
-                openCount++;
+                lineNumberCount++;
             }
         }
     }
-
     inFile.close();
 
-    openDelimiter = new char[openCount];
-    int count = 0;
+    lineNumber = new int[lineNumberCount];
 
     inFile.open(fileName);
-
-    while (getline(inFile, line))
+    int lineCount = 0;
+    //get the number of open brackets
+    while(getline(inFile, line))
     {
-        for (char c : line)
+        lineCount++;
+        for(char c : line)
         {
-            if (c == '{' || c == '(' || c == '[' || c == '}' || c == ')' || c == ']')
+            if(c == '{' || c == '(' || c == '[' || c == '}' || c == ')' || c == ']')
             {
-                openDelimiter[count] = c;
-                count++;
+                lineNumber[openCount] = lineCount;
+                openCount++;
+                delimiter += c;
             }
         }
     }
+    cout << delimiter << endl;
+
+    for(int i=0; i<lineNumberCount; ++i)
+    {
+        cout << lineNumber[i] << endl;
+    }
 
     inFile.close();
-    return openDelimiter;
+
+    // openDelimiter = new char[openCount];
+    // int count = 0;
+
+    // // initilize the array
+    // for(int i = 0; i < openCount; ++i)
+    // {
+    //     openDelimiter[i] = delimiter[i];
+    // }
+
+    // inFile.close();
+    // return openDelimiter;
+    return delimiter;
 }
 
-void Check::pairMatch(char* arr, int count)
+void Check::pairMatch(string arr, int count)
 {
     GenStack<char> myStack(openCount);
+    int delimiterLeft = openCount;
+
     for(int i = 0; i < openCount; ++i)
     {
         if (arr[i] == '{' || arr[i] == '(' || arr[i] == '[')
@@ -85,36 +108,37 @@ void Check::pairMatch(char* arr, int count)
         {
             if(myStack.isEmpty())
             {
-                cout << "There is a problem" << endl;
-                break;
+                cout << "Missing an open delimiter at LINE " << lineNumber[i] << endl;
+                exit(1);
             }
 
             if(arr[i] == '}' && myStack.peek() == '{')
             {
                 myStack.pop();
+                delimiterLeft -= 2;
                 continue;
             }
             else if (arr[i] == ')' && myStack.peek() == '(')
             {
                 myStack.pop();
+                delimiterLeft -= 2;
                 continue;
             }
             else if (arr[i] == ']' && myStack.peek() == '[')
             {
                 myStack.pop();
+                delimiterLeft -= 2;
                 continue;
             }
             else
             {
-                cout << "There is an unmathch here" << endl;
-                break;
+                cout << "There is an unmathch at line " << lineNumber[i] << endl;
+                exit(1);
             }
         }
-        if(myStack.isEmpty())
-            cout << "Everything is good" << endl;
-        else
-            cout << "Some symbols never matched" << endl;
     }
-
-
+    if(myStack.isEmpty())
+        cout << "Everything is good" << endl;
+    else
+        cout << "Missing " << delimiterLeft << " closng delimiters in the end" << endl;
 }

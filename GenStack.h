@@ -1,4 +1,4 @@
-#include <iostream>
+ #include <iostream>
 
 using namespace std;
 
@@ -17,6 +17,7 @@ public:
 
     bool isFull();  //check if the stack is full
     bool isEmpty(); //check if the stack is empty
+    int getSize();
 
     int size;
     int top;
@@ -108,4 +109,10 @@ template <class E>
 bool GenStack<E>::isEmpty()
 {
     return (top == -1);
+}
+
+template <class E>
+int GenStack<E>::getSize()
+{
+    return size;
 }
