@@ -20,6 +20,9 @@ public:
     int* lineNumber; //an array to store the line number for each delimider
     GenStack<char> myStack; //create a stack to store all the characters
 
+    bool inQuote;
+    string singleQuote;
+
     string readFile(string filename); //a method to read the file
     void pairMatch(string arr, int count); //method to pair the delimiders
     bool checkHasFile(); 
