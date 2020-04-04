@@ -216,7 +216,22 @@ void Check::pairMatch(string arr, int count)
         if(myStack.isEmpty()) //if the stack is empty in teh end, then everything is good
             cout << "Everything is good" << endl;
         else
+        {
             cout << "Missing " << delimiterLeft << " closng delimiters in the end" << endl;
+            string result = "";
+            for(int i=0; i<delimiterLeft; ++i)
+            {
+                char ch = myStack.peek();
+                if(ch == '{')
+                    result += "} ";
+                else if(ch == '(')
+                    result += ") ";
+                else if(ch == '[')
+                    result += "] ";
+                myStack.pop();
+            }
+            cout << result << endl;
+        }
     }
 }
 
