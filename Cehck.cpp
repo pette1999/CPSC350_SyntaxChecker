@@ -73,26 +73,15 @@ string Check::readFile(string filename)
             }
         }
     }
-    cout << delimiter << endl;
+    // cout << delimiter << endl;
 
-    for(int i=0; i<lineNumberCount; ++i)
-    {
-        cout << lineNumber[i] << endl;
-    }
+    // for(int i=0; i<lineNumberCount; ++i)
+    // {
+    //     cout << lineNumber[i] << endl;
+    // }
 
     inFile.close();
 
-    // openDelimiter = new char[openCount];
-    // int count = 0;
-
-    // // initilize the array
-    // for(int i = 0; i < openCount; ++i)
-    // {
-    //     openDelimiter[i] = delimiter[i];
-    // }
-
-    // inFile.close();
-    // return openDelimiter;
     return delimiter;
 }
 
