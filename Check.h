@@ -7,18 +7,20 @@ using namespace std;
 class Check
 {
 public:
-    Check();
-    Check(string filename);
+    Check(); //constrctor
+    Check(string filename); //overloaded constructor
 
-    ifstream inFile;
-    int openCount;
-    int lineNumberCount;
+    ifstream inFile; //read the input file
+    int openCount; //count the open delimiter
+    int lineNumberCount; // count the line number
+    bool hasFile; //check if the file exists
     string line;
     string fileName;
     string delimiter;
-    int* lineNumber;
-    GenStack<char> myStack;//create a stack to store all the characters
+    int* lineNumber; //an array to store the line number for each delimider
+    GenStack<char> myStack; //create a stack to store all the characters
 
-    string readFile();
-    void pairMatch(string arr, int count);
+    string readFile(string filename); //a method to read the file
+    void pairMatch(string arr, int count); //method to pair the delimiders
+    bool checkHasFile(); 
 };

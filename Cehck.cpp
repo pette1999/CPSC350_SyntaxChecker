@@ -5,18 +5,19 @@ using namespace std;
 
 Check::Check()
 {
-    fileName = "test.txt";
+    fileName = "test.txt"; //default text file 
     openCount = 0;
     delimiter = "";
     lineNumberCount = 0;
+    hasFile = true;
 
     ifstream inFile(fileName); //read the file
     line = "";
 
     if (!inFile)
     {
-        cout << fileName << " does not exist. " << endl;
-        exit(1);
+        hasFile = false;
+        cout << fileName << " does not exist. " << endl; //if the file does not exist, set hasFile to false
     }
 }
 
@@ -26,19 +27,21 @@ Check::Check(string filename)
     openCount = 0;
     delimiter = "";
     lineNumberCount = 0;
+    hasFile = true;
 
     ifstream inFile(fileName); //read the file
     line = "";
 
     if (!inFile)
     {
+        hasFile = false;
         cout << fileName << " does not exist. " << endl;
-        exit(1);
     }
 }
 
-string Check::readFile()
+string Check::readFile(string filename)
 {
+    fileName = filename;
     inFile.open(fileName);
     while(getline(inFile, line))
     {
@@ -46,13 +49,13 @@ string Check::readFile()
         {
             if(c == '{' || c == '(' || c == '[' || c == '}' || c == ')' || c == ']')
             {
-                lineNumberCount++;
+                lineNumberCount++; //coutn the delimider
             }
         }
     }
     inFile.close();
 
-    lineNumber = new int[lineNumberCount];
+    lineNumber = new int[lineNumberCount]; //create am array to store line number
 
     inFile.open(fileName);
     int lineCount = 0;
@@ -102,14 +105,21 @@ void Check::pairMatch(string arr, int count)
     {
         if (arr[i] == '{' || arr[i] == '(' || arr[i] == '[')
         {
-            myStack.push(arr[i]);
+            myStack.push(arr[i]); //we push all the open delimider to the stack
         }
         else if (arr[i] == '}' || arr[i] == ')' || arr[i] == ']')
         {
-            if(myStack.isEmpty())
+            if(myStack.isEmpty()) //check if the stack is empty
             {
-                cout << "Missing an open delimiter at LINE " << lineNumber[i] << endl;
-                exit(1);
+                char t = ' ';
+                if(arr[i] == '}')
+                    t = '{';
+                else if(arr[i] == ')')
+                    t = '(';
+                else if(arr[i] == ']')
+                    t = '[';
+                cout << "Missing an open delimiter " << t << " at LINE " << lineNumber[i] << endl;
+                break;
             }
 
             if(arr[i] == '}' && myStack.peek() == '{')
@@ -132,13 +142,26 @@ void Check::pairMatch(string arr, int count)
             }
             else
             {
+                char t = ' ';
+                if(myStack.peek() == '{')
+                    t = '}';
+                else if(myStack.peek() == '(')
+                    t = ')';
+                else if(myStack.peek() == '[')
+                    t = ']';
                 cout << "There is an unmathch at line " << lineNumber[i] << endl;
-                exit(1);
+                cout << "Should be " << t << " instead of " << arr[i] << endl;
+                break;
             }
         }
     }
-    if(myStack.isEmpty())
+    if(myStack.isEmpty()) //if the stack is empty in teh end, then everything is good
         cout << "Everything is good" << endl;
     else
         cout << "Missing " << delimiterLeft << " closng delimiters in the end" << endl;
+}
+
+bool Check::checkHasFile()
+{
+    return hasFile;
 }
