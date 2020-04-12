@@ -230,7 +230,7 @@ void Check::pairMatch(string arr, int count)
                     result += "] ";
                 myStack.pop();
             }
-            cout << result << endl;
+            cout << "Missing " << result << endl;
         }
     }
 }
